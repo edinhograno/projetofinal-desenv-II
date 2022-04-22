@@ -1,12 +1,21 @@
 import React from "react";
+import InitialPage from "./components/InitialPage";
+import { createGlobalStyle } from "styled-components";
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Oi</h1>
-      </header>
-    </div>
+    <>
+      <GlobalStyle />
+      <InitialPage />
+    </>
   );
 }
 
