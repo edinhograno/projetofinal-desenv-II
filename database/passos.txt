@@ -1,0 +1,6 @@
+1) Dockerfile define com a imagem a gerada. Setamos a senha do admin e copiamos o sql de inicialização nele 
+2) Rodar setup.sh 'docker build -t edinho-database .'. Isso aqui pega o dockerfile, e cria uma imagem com o nome edinho-database
+3 opcional) Docker ps, pra pegar o id do container, e ai docker nesse stop id
+4) rodar run.sh 'docker run --restart=always -d -p 5432:5432 -v %cd%/data:/var/lib/postgresql/data edinho-database'. Isso coloca 
+a imagem que foi criada anteriromente pra rodar, mapeia a porta 5432 do container pra da sua maquina, e cria um volume no disco
+pra persistencia
