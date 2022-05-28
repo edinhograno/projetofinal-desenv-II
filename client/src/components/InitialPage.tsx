@@ -1,25 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginCadasterPage from "./LoginCadasterPage";
 
 export default function InitialPage() {
   const [isLogin, setIsLogin] = useState(true);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [teste, setTeste] = useState([{}]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/user");
+        const json = await response.json();
+        setTeste(json.users);
+        console.log(teste);
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <LoginCadasterPage
       isLogin={isLogin}
       setIsLogin={setIsLogin}
-      name={name}
-      email={email}
-      password={password}
-      confirmPassword={confirmPassword}
-      setName={setName}
-      setEmail={setEmail}
-      setPassword={setPassword}
-      setConfirmPassword={setConfirmPassword}
+      data={data}
+      setData={setData}
     />
   );
 }

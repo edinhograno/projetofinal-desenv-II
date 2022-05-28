@@ -4,14 +4,13 @@ import styled from "styled-components";
 type Types = {
   isLogin: boolean;
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
-  setName: React.Dispatch<React.SetStateAction<string>>;
-  setEmail: React.Dispatch<React.SetStateAction<string>>;
-  setPassword: React.Dispatch<React.SetStateAction<string>>;
-  setConfirmPassword: React.Dispatch<React.SetStateAction<string>>;
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
+  setData: React.Dispatch<React.SetStateAction<{}>>;
+  data: {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  };
 };
 
 const Login = styled.div.attrs((props: Types) => ({
@@ -232,19 +231,23 @@ export default function LoginCadasterPage(props: Types) {
               <span className="login-form-title">Bem vindo!</span>
               <div className="wrapper-input">
                 <input
-                  className={`input ${props.email && "has-value"}`}
+                  className={`input ${props.data.email && "has-value"}`}
                   type="email"
-                  value={props.email}
-                  onChange={(e) => props.setEmail(e.target.value)}
+                  value={props.data.email}
+                  onChange={(e) =>
+                    props.setData({ ...props.data, email: e.target.value })
+                  }
                 />
                 <span className="focus-input" data-placeholder="E-mail"></span>
               </div>
               <div className="wrapper-input">
                 <input
-                  className={`input ${props.password && "has-value"}`}
+                  className={`input ${props.data.password && "has-value"}`}
                   type="password"
-                  value={props.password}
-                  onChange={(e) => props.setPassword(e.target.value)}
+                  value={props.data.password}
+                  onChange={(e) =>
+                    props.setData({ ...props.data, password: e.target.value })
+                  }
                 />
                 <span className="focus-input" data-placeholder="Senha"></span>
               </div>
@@ -269,10 +272,12 @@ export default function LoginCadasterPage(props: Types) {
               <span className="login-form-title">Crie sua conta</span>
               <div className="wrapper-input">
                 <input
-                  className={`input ${props.name && "has-value"}`}
+                  className={`input ${props.data.name && "has-value"}`}
                   type="email"
-                  value={props.name}
-                  onChange={(e) => props.setName(e.target.value)}
+                  value={props.data.name}
+                  onChange={(e) =>
+                    props.setData({ ...props.data, name: e.target.value })
+                  }
                 />
                 <span
                   className="focus-input"
@@ -281,10 +286,12 @@ export default function LoginCadasterPage(props: Types) {
               </div>
               <div className="wrapper-input">
                 <input
-                  className={`input ${props.email && "has-value"}`}
+                  className={`input ${props.data.email && "has-value"}`}
                   type="email"
-                  value={props.email}
-                  onChange={(e) => props.setEmail(e.target.value)}
+                  value={props.data.email}
+                  onChange={(e) =>
+                    props.setData({ ...props.data, email: e.target.value })
+                  }
                 />
                 <span
                   className="focus-input"
@@ -293,10 +300,12 @@ export default function LoginCadasterPage(props: Types) {
               </div>
               <div className="wrapper-input">
                 <input
-                  className={`input ${props.password && "has-value"}`}
+                  className={`input ${props.data.password && "has-value"}`}
                   type="password"
-                  value={props.password}
-                  onChange={(e) => props.setPassword(e.target.value)}
+                  value={props.data.password}
+                  onChange={(e) =>
+                    props.setData({ ...props.data, password: e.target.value })
+                  }
                 />
                 <span
                   className="focus-input"
@@ -305,10 +314,17 @@ export default function LoginCadasterPage(props: Types) {
               </div>
               <div className="wrapper-input">
                 <input
-                  className={`input ${props.confirmPassword && "has-value"}`}
+                  className={`input ${
+                    props.data.confirmPassword && "has-value"
+                  }`}
                   type="password"
-                  value={props.confirmPassword}
-                  onChange={(e) => props.setConfirmPassword(e.target.value)}
+                  value={props.data.confirmPassword}
+                  onChange={(e) =>
+                    props.setData({
+                      ...props.data,
+                      confirmPassword: e.target.value,
+                    })
+                  }
                 />
                 <span
                   className="focus-input"
