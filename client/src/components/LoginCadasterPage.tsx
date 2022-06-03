@@ -1,353 +1,61 @@
-import React from "react";
-import styled from "styled-components";
-
-type Types = {
-  isLogin: boolean;
-  setIsLogin: React.Dispatch<React.SetStateAction<boolean>>;
-  setData: React.Dispatch<React.SetStateAction<{}>>;
-  data: {
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-  };
-};
-
-const Login = styled.div.attrs((props: Types) => ({
-  isLogin: props.isLogin,
-}))`
-  background-color: #111;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: 0 auto;
-
-  .container-login {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 15px 20px;
-  }
-
-  .logo {
-    background-color: #f0f0f0;
-    max-width: 390px;
-    height: ${(props) => (props.isLogin ? "40%" : "15%")};
-    width: 100%;
-    border-radius: 20px 20px 0px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 50px;
-  }
-  .wrap-login {
-    width: 100%;
-    height: ${(props) => (props.isLogin ? "60%" : "85%")};
-    max-width: 390px;
-    background-color: #333;
-    border-radius: 0px 0px 20px 20px;
-    overflow: hidden;
-    padding: 50px 55px 0px;
-    box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.2);
-  }
-
-  .login-form {
-    width: 100%;
-  }
-
-  .login-form-title {
-    display: block;
-    font-size: 30px;
-    color: azure;
-    line-height: 1.2;
-    text-align: center;
-    padding-bottom: 50px;
-  }
-
-  .wrapper-input {
-    width: 100%;
-    position: relative;
-    border-bottom: 2px solid #adadad;
-    margin-bottom: 37px;
-  }
-
-  .input {
-    font-size: 15px;
-    color: #fff;
-    line-height: 1.2;
-    border: none;
-    display: block;
-    width: 100%;
-    height: 45px;
-    background-color: transparent;
-    padding: 0 5px;
-  }
-
-  .input:focus {
-    outline: none;
-  }
-
-  .focus-input {
-    position: absolute;
-    display: block;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    color: #adadad;
-  }
-
-  .focus-input::before {
-    content: "";
-    display: block;
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    transition: all 0.4s;
-    -webkit-transition: all 0.4s;
-    -moz-transition: all 0.4s;
-    -o-transition: all 0.4s;
-    background: linear-gradient(to left, #21d4fd, #b721ff);
-    background: -webkit-linear-gradient(to left, #21d4fd, #b721ff);
-    background: -moz-linear-gradient(to left, #21d4fd, #b721ff);
-    background: -o-linear-gradient(to left, #21d4fd, #b721ff);
-  }
-
-  .focus-input::after {
-    font-size: 15px;
-    color: #999;
-    line-height: 1.2;
-    content: attr(data-placeholder);
-    display: block;
-    width: 100%;
-    position: absolute;
-    top: 16px;
-    left: 0px;
-    padding-left: 5px;
-    transition: all 0.4s;
-    -webkit-transition: all 0.4s;
-    -moz-transition: all 0.4s;
-    -o-transition: all 0.4s;
-  }
-
-  .input:focus + .focus-input::after {
-    top: -15px;
-  }
-  .input:focus + .focus-input::before {
-    width: 100%;
-  }
-
-  .has-value + .focus-input::after {
-    top: -15px;
-  }
-  .has-value + .focus-input::before {
-    width: 100%;
-  }
-
-  .container-login-form-btn {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    padding-bottom: 13px;
-  }
-  .login-form-btn {
-    font-size: 15px;
-    border: none;
-    border-radius: 10px;
-    color: #fff;
-    line-height: 1.2;
-    text-transform: uppercase;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 50px;
-    cursor: pointer;
-    background: linear-gradient(to left, #21d4fd, #b721ff);
-    background: -webkit-linear-gradient(to left, #21d4fd, #b721ff);
-    background: -moz-linear-gradient(to left, #21d4fd, #b721ff);
-    background: -o-linear-gradient(to left, #21d4fd, #b721ff);
-  }
-
-  .text-center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 50px;
-  }
-  .txt1,
-  .txt2 {
-    font-size: 14px;
-    line-height: 1.5;
-    text-decoration: none;
-  }
-  .txt2 {
-    color: #6a7dfe;
-    margin-left: 5px;
-  }
-  .txt1 {
-    color: #adadad;
-  }
-
-  @media only screen and (min-width: 810px) {
-    .container-login {
-      max-width: 1200px;
-    }
-    .logo,
-    .wrap-login {
-      height: ${(props) => (props.isLogin ? "60%" : "85%")};
-    }
-    .logo {
-      border-radius: 20px 0px 0px 20px;
-    }
-    .wrap-login {
-      border-radius: 0px 20px 20px 0px;
-    }
-  }
-
-  @media only screen and (min-width: 1100px) {
-    .logo {
-      max-width: 600px;
-    }
-  }
-`;
+import React, { useState } from "react";
+import logo from "../img/logo.svg";
+import { Container } from "../styles/LoginCadasterPageStyle";
+import { Types } from "../types/types";
+import Login from "./Login";
+import Cadaster from "./Cadaster";
 
 export default function LoginCadasterPage(props: Types) {
+  const [signUpMode, setSignUpMode] = useState(false);
+
   return (
-    <Login isLogin={props.isLogin}>
-      <div className="container-login">
-        <div className="logo">LOGO</div>
-        {props.isLogin ? (
-          <div className="wrap-login">
-            <form className="login-form">
-              <span className="login-form-title">Bem vindo!</span>
-              <div className="wrapper-input">
-                <input
-                  className={`input ${props.data.email && "has-value"}`}
-                  type="email"
-                  value={props.data.email}
-                  onChange={(e) =>
-                    props.setData({ ...props.data, email: e.target.value })
-                  }
-                />
-                <span className="focus-input" data-placeholder="E-mail"></span>
-              </div>
-              <div className="wrapper-input">
-                <input
-                  className={`input ${props.data.password && "has-value"}`}
-                  type="password"
-                  value={props.data.password}
-                  onChange={(e) =>
-                    props.setData({ ...props.data, password: e.target.value })
-                  }
-                />
-                <span className="focus-input" data-placeholder="Senha"></span>
-              </div>
-              <div className="container-login-form-btn">
-                <button className="login-form-btn">Entrar</button>
-              </div>
-              <div className="text-center">
-                <span className="txt1">Não possui conta?</span>
-                <a
-                  href="#"
-                  className="txt2"
-                  onClick={() => props.setIsLogin(!props.isLogin)}
-                >
-                  Criar conta.
-                </a>
-              </div>
-            </form>
+    <>
+      <Container signUpMode={signUpMode}>
+        <div className="forms-container">
+          <div className="sign-in-sign-up">
+            <Login />
+            <Cadaster data={props.data} setData={props.setData} />
           </div>
-        ) : (
-          <div className="wrap-login">
-            <form className="login-form">
-              <span className="login-form-title">Crie sua conta</span>
-              <div className="wrapper-input">
-                <input
-                  className={`input ${props.data.name && "has-value"}`}
-                  type="email"
-                  value={props.data.name}
-                  onChange={(e) =>
-                    props.setData({ ...props.data, name: e.target.value })
-                  }
-                />
-                <span
-                  className="focus-input"
-                  data-placeholder="Digite seu nome"
-                ></span>
-              </div>
-              <div className="wrapper-input">
-                <input
-                  className={`input ${props.data.email && "has-value"}`}
-                  type="email"
-                  value={props.data.email}
-                  onChange={(e) =>
-                    props.setData({ ...props.data, email: e.target.value })
-                  }
-                />
-                <span
-                  className="focus-input"
-                  data-placeholder="Digite seu e-mail"
-                ></span>
-              </div>
-              <div className="wrapper-input">
-                <input
-                  className={`input ${props.data.password && "has-value"}`}
-                  type="password"
-                  value={props.data.password}
-                  onChange={(e) =>
-                    props.setData({ ...props.data, password: e.target.value })
-                  }
-                />
-                <span
-                  className="focus-input"
-                  data-placeholder="Digite uma senha"
-                ></span>
-              </div>
-              <div className="wrapper-input">
-                <input
-                  className={`input ${
-                    props.data.confirmPassword && "has-value"
-                  }`}
-                  type="password"
-                  value={props.data.confirmPassword}
-                  onChange={(e) =>
-                    props.setData({
-                      ...props.data,
-                      confirmPassword: e.target.value,
-                    })
-                  }
-                />
-                <span
-                  className="focus-input"
-                  data-placeholder="Confirme sua senha"
-                ></span>
-              </div>
-              <div className="container-login-form-btn">
-                <button className="login-form-btn">Criar conta</button>
-              </div>
-              <div className="text-center">
-                <span className="txt1">Já possui conta?</span>
-                <a
-                  href="#"
-                  className="txt2"
-                  onClick={() => props.setIsLogin(!props.isLogin)}
-                >
-                  Faça Login.
-                </a>
-              </div>
-            </form>
+        </div>
+        <div className="panels-container">
+          <div className="panel left-panel">
+            <div className="content">
+              <h3>Quer mais segurança em suas corridas?</h3>
+              <p>
+                Crie agora seu círculo de amigos e compartilhe a sua
+                localização.
+              </p>
+              <button
+                className="btn transparent"
+                onClick={() => setSignUpMode(true)}
+                id="sign-up-btn"
+              >
+                Criar Conta
+              </button>
+            </div>
+            <img src={logo} alt="" className="image" />
           </div>
-        )}
-      </div>
-    </Login>
+          <div className="panel right-panel">
+            <div className="content">
+              <h3>Você já possuí uma conta?</h3>
+              <p>
+                Acesse agora a sua conta, compartilhe sua localização e tenha
+                mais segurança!
+              </p>
+              <button
+                className="btn transparent"
+                onClick={() => {
+                  setSignUpMode(false);
+                }}
+                id="sign-in-btn"
+              >
+                Faça Login
+              </button>
+            </div>
+            <img src={logo} alt="" className="image" />
+          </div>
+        </div>
+      </Container>
+    </>
   );
 }

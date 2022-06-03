@@ -1,14 +1,11 @@
-import React, { useState } from "react";
 import styled from "styled-components";
-import rocket from "../img/logo.svg";
-import pressplay from "../img/pressplay.svg";
 
 type Types = {
   signUpMode: boolean;
   setSignUpMode: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Container = styled.div.attrs((props: Types) => ({
+export const Container = styled.div.attrs((props: Types) => ({
   signUpMode: props.signUpMode,
 }))`
   font-family: "Poppins", sans-serif;
@@ -53,7 +50,7 @@ const Container = styled.div.attrs((props: Types) => ({
     z-index: 5;
     transition: 1s 0.7s ease-in-out;
   }
-  form {
+  .form {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -64,11 +61,11 @@ const Container = styled.div.attrs((props: Types) => ({
     grid-row: 1 / 2;
     transition: 0.2s 0.7s ease-in-out;
   }
-  form.sign-in-form {
+  .form.sign-in-form {
     z-index: ${(props) => (props.signUpMode ? "1" : "2")};
     opacity: ${(props) => (props.signUpMode ? "0" : "1")};
   }
-  form.sign-up-form {
+  .form.sign-up-form {
     z-index: ${(props) => (props.signUpMode ? "2" : "1")};
     opacity: ${(props) => (props.signUpMode ? "1" : "0")};
   }
@@ -78,6 +75,7 @@ const Container = styled.div.attrs((props: Types) => ({
     margin-bottom: 10px;
   }
   .input-field {
+    position: relative;
     max-width: 380px;
     width: 100%;
     height: 55px;
@@ -224,118 +222,4 @@ const Container = styled.div.attrs((props: Types) => ({
   .right-panel .image {
     transform: ${(props) => (props.signUpMode ? "0px" : "translateX(800px)")};
   }
-
-  /* animations */
 `;
-
-export default function LoginComponent() {
-  const [signUpMode, setSignUpMode] = useState(false);
-  return (
-    <>
-      <Container signUpMode={signUpMode}>
-        <div className="forms-container">
-          <div className="sign-in-sign-up">
-            <form action="" className="sign-in-form">
-              <h2 className="title">Login</h2>
-              <div className="input-field">
-                <i className="fas fa-user"></i>
-                <input type="text" placeholder="Email" />
-              </div>
-              <div className="input-field">
-                <i className="fas fa-lock"></i>
-                <input type="password" placeholder="Senha" />
-              </div>
-              <input type="submit" value="Login" className="btn solid" />
-              <p className="social-text">Login com</p>
-              <div className="social-media">
-                <a href="#" className="social-icon">
-                  <i className="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" className="social-icon">
-                  <i className="fab fa-twitter"></i>
-                </a>
-                <a href="#" className="social-icon">
-                  <i className="fab fa-google"></i>
-                </a>
-                <a href="#" className="social-icon">
-                  <i className="fab fa-linkedin-in"></i>
-                </a>
-              </div>
-            </form>
-            <form action="" className="sign-up-form">
-              <h2 className="title">Criar Conta</h2>
-              <div className="input-field">
-                <i className="fas fa-user"></i>
-                <input type="text" placeholder="Nome" />
-              </div>
-              <div className="input-field">
-                <i className="fas fa-envelope"></i>
-                <input type="text" placeholder="E-mail" />
-              </div>
-              <div className="input-field">
-                <i className="fas fa-lock"></i>
-                <input type="password" placeholder="Senha" />
-              </div>
-              <div className="input-field">
-                <i className="fas fa-lock"></i>
-                <input type="password" placeholder="Confirmar Senha" />
-              </div>
-              <input type="submit" value="Sign up" className="btn solid" />
-              <p className="social-text">Login com</p>
-              <div className="social-media">
-                <a href="#" className="social-icon">
-                  <i className="fab fa-facebook-f"></i>
-                </a>
-                <a href="#" className="social-icon">
-                  <i className="fab fa-twitter"></i>
-                </a>
-                <a href="#" className="social-icon">
-                  <i className="fab fa-google"></i>
-                </a>
-                <a href="#" className="social-icon">
-                  <i className="fab fa-linkedin-in"></i>
-                </a>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div className="panels-container">
-          <div className="panel left-panel">
-            <div className="content">
-              <h3>Quer mais segurança em suas corridas?</h3>
-              <p>
-                Crie agora seu círculo de amigos e compartilhe a sua
-                localização.
-              </p>
-              <button
-                className="btn transparent"
-                onClick={() => setSignUpMode(true)}
-                id="sign-up-btn"
-              >
-                Criar Conta
-              </button>
-            </div>
-            <img src={rocket} alt="" className="image" />
-          </div>
-          <div className="panel right-panel">
-            <div className="content">
-              <h3>Você já possuí uma conta?</h3>
-              <p>
-                Acesse agora a sua conta, compartilhe sua localização e tenha
-                mais segurança!
-              </p>
-              <button
-                className="btn transparent"
-                onClick={() => setSignUpMode(false)}
-                id="sign-in-btn"
-              >
-                Faça Login
-              </button>
-            </div>
-            <img src={rocket} alt="" className="image" />
-          </div>
-        </div>
-      </Container>
-    </>
-  );
-}

@@ -1,7 +1,7 @@
 import React from "react";
 import InitialPage from "./components/InitialPage";
 import { createGlobalStyle } from "styled-components";
-import LoginComponent from "./components/LoginComponent";
+import LoggedPage from "./components/LoggedPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -16,7 +16,7 @@ function App() {
     <>
       <GlobalStyle />
       {/* <InitialPage /> */}
-      <LoginComponent />
+      <LoggedPage />
     </>
   );
 }
