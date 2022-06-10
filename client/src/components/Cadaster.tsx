@@ -1,39 +1,41 @@
 import React, { useState } from "react";
 import { register } from "../api/api";
-import { Types } from "../types/types";
+import { TypesData } from "../types/types";
 
-export default function Cadaster(props: Types) {
+export default function Cadaster(props: TypesData) {
   const [status, setStatus] = useState({
     name: false,
     email: false,
     password: false,
     confirmPassword: false,
   });
+
   const registerChecker = () => {
+    const email = props.data.email;
+    const name = props.data.name;
+    const password = props.data.password;
+    const confirmPassword = props.data.confirmPassword;
+
     console.log(props.data);
-    if (
-      props.data.email !== "" &&
-      props.data.name !== "" &&
-      props.data.password !== ""
-    ) {
-      if (props.data.password !== props.data.confirmPassword) {
+    if (email !== "" && name !== "" && password !== "") {
+      if (password !== confirmPassword) {
         setStatus({ ...status, password: true, confirmPassword: true });
         console.log(status);
       } else {
-        register(props.data.name, props.data.email, props.data.password);
+        register(name, email, password);
         console.log("foi pra api");
       }
     } else {
-      if (props.data.name === "") {
+      if (name === "") {
         setStatus({ ...status, name: true });
         console.log(status);
-      } else if (props.data.email === "") {
+      } else if (email === "") {
         setStatus({ ...status, email: true });
         console.log(status);
-      } else if (props.data.password === "") {
+      } else if (password === "") {
         setStatus({ ...status, password: true });
         console.log(status);
-      } else if (props.data.confirmPassword === "") {
+      } else if (confirmPassword === "") {
         setStatus({ ...status, confirmPassword: true });
         console.log(status);
       }

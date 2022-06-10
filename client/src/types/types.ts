@@ -1,9 +1,4 @@
-export type Types = {
-  loginData: {
-    email: string;
-    password: string;
-  };
-  setLoginData: React.Dispatch<React.SetStateAction<{}>>;
+export type TypesData = {
   setData: React.Dispatch<React.SetStateAction<{}>>;
   data: {
     name: string;
@@ -11,6 +6,14 @@ export type Types = {
     password: string;
     confirmPassword: string;
   };
+};
+
+export type TypesLoginData = {
+  loginData: {
+    email: string;
+    password: string;
+  };
+  setLoginData: React.Dispatch<React.SetStateAction<{}>>;
 };
 
 export type TypesLocation = {
@@ -21,4 +24,9 @@ export type TypesLocation = {
       lng: string;
     };
   };
+};
+
+export type TypesLogged = {
+  isLogged: boolean;
+  setIsLogged: React.Dispatch<React.SetStateAction<boolean>>;
 };

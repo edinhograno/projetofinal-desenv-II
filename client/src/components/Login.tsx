@@ -1,7 +1,23 @@
+import axios from "axios";
 import React from "react";
-import { Types } from "../types/types";
+import { login } from "../api/api";
+// import { login } from "../api/api";
+import { TypesLogged, TypesLoginData } from "../types/types";
 
-export default function Login(props: Types) {
+export default function Login(props: TypesLoginData & TypesLogged) {
+  const checkUserCredentials = () => {
+    const email = props.loginData.email;
+    const password = props.loginData.password;
+    const setIsLogged = props.setIsLogged;
+
+    if (email === "" && password === "") {
+      console.log("Digite os campos corretamente");
+    } else {
+      const data = login(email, password, setIsLogged);
+      console.log(data);
+    }
+  };
+
   return (
     <div className="sign-in-form form">
       <h2 className="title">Login</h2>
@@ -31,13 +47,10 @@ export default function Login(props: Types) {
           }
         />
       </div>
-      <button
-        className="btn solid"
-        onClick={() => console.log("ainda não faz nada")}
-      >
+      <button className="btn solid" onClick={() => checkUserCredentials()}>
         Login
       </button>
-      <p className="social-text">Login com</p>
+      {/* <p className="social-text">Login com</p>
       <div className="social-media">
         <a href="#" className="social-icon">
           <i className="fab fa-facebook-f"></i>
@@ -51,7 +64,7 @@ export default function Login(props: Types) {
         <a href="#" className="social-icon">
           <i className="fab fa-linkedin-in"></i>
         </a>
-      </div>
+      </div> */}
     </div>
   );
 }

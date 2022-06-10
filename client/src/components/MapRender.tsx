@@ -25,28 +25,30 @@ export default function MapRender() {
 
   return (
     <Map>
-      <MapContainer
-        className="map-container"
-        center={{
-          lat: location.coordinates.lat,
-          lng: location.coordinates.lng,
-        }}
-        zoom={10}
-        scrollWheelZoom={true}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {location.loaded && (
+      {location.loaded ? (
+        <MapContainer
+          className="map-container"
+          center={{
+            lat: location.coordinates.lat,
+            lng: location.coordinates.lng,
+          }}
+          zoom={15}
+          scrollWheelZoom={true}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
           <Marker
             icon={markerIcon}
             position={[location.coordinates.lat, location.coordinates.lng]}
           >
             <Popup>Achoooou!</Popup>
           </Marker>
-        )}
-      </MapContainer>
+        </MapContainer>
+      ) : (
+        <div>Loading...</div>
+      )}
     </Map>
   );
 }

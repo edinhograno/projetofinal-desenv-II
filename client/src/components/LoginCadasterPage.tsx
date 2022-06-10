@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import logo from "../img/logo.svg";
 import { Container } from "../styles/LoginCadasterPageStyle";
-import { Types } from "../types/types";
+import { TypesLoginData, TypesData, TypesLogged } from "../types/types";
 import Login from "./Login";
 import Cadaster from "./Cadaster";
 
-export default function LoginCadasterPage(props: Types) {
+export default function LoginCadasterPage(
+  props: TypesLoginData & TypesData & TypesLogged
+) {
   const [signUpMode, setSignUpMode] = useState(false);
 
   return (
@@ -13,7 +15,12 @@ export default function LoginCadasterPage(props: Types) {
       <Container signUpMode={signUpMode}>
         <div className="forms-container">
           <div className="sign-in-sign-up">
-            <Login />
+            <Login
+              isLogged={props.isLogged}
+              setIsLogged={props.setIsLogged}
+              loginData={props.loginData}
+              setLoginData={props.setLoginData}
+            />
             <Cadaster data={props.data} setData={props.setData} />
           </div>
         </div>

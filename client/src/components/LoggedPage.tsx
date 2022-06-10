@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import "leaflet/dist/leaflet.css";
+// eslint-disable-line
 import logo from "../img/logomenu.svg";
 import { MdOutlineAdd } from "react-icons/md";
 import { BiRightArrow } from "react-icons/bi";
 import MapRender from "./MapRender";
+import NewCircle from "./NewCircle";
 
 type Type = {
   active: boolean;
@@ -18,6 +20,7 @@ const ContainerMap = styled.div.attrs((props: Type) => ({
   height: 100vh;
   position: relative;
   overflow: hidden;
+  font-family: "Poppins", sans-serif;
 
   .container-menu {
     left: 0;
@@ -33,7 +36,7 @@ const ContainerMap = styled.div.attrs((props: Type) => ({
     box-shadow: 2px 3px 10px #e0e0e0;
   }
   .container-header {
-    height: 6rem;
+    height: 10vh;
     padding: 1rem 0.5rem;
     display: flex;
     border-bottom: 1px solid #ececec;
@@ -49,9 +52,9 @@ const ContainerMap = styled.div.attrs((props: Type) => ({
     }
   }
   .add-circle {
-    margin: 1rem 0 0 1rem;
+    margin: 1rem 0 1rem 1rem;
     width: 40%;
-    height: 3rem;
+    height: 5vh;
     border-radius: 2rem;
     display: flex;
     align-items: center;
@@ -79,11 +82,11 @@ const ContainerMap = styled.div.attrs((props: Type) => ({
     }
   }
   .menu-item {
-    height: 100vh;
+    height: 65vh;
     width: 100%;
 
     .btn-item {
-      margin: 1rem 1rem 1rem 0;
+      margin: 0 1rem 1rem 0;
       width: 95%;
       height: 3rem;
       border-top-right-radius: 2rem;
@@ -125,10 +128,59 @@ const ContainerMap = styled.div.attrs((props: Type) => ({
       }
     }
   }
+  .join-circle {
+    /* background-color: blue; */
+    border-top: 1px solid #ececec;
+    height: 20vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+
+    label {
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    input {
+      position: relative;
+      max-width: 380px;
+      width: 100%;
+      height: 45px;
+      margin: 10px 0;
+      border-radius: 55px;
+      padding: 0 0.8rem;
+      border: none;
+      background-color: rgba(66, 115, 185, 0.2);
+      outline: none;
+      line-height: 1;
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: #185abc;
+
+      &::placeholder {
+        color: #185abc;
+      }
+    }
+    button {
+      width: 120px;
+      height: 40px;
+      border: none;
+      outline: none;
+      border-radius: 49px;
+      cursor: pointer;
+      background-color: #4273b9;
+      color: #fff;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin: 10px 0;
+      transition: 0.5s;
+    }
+  }
 `;
 
 export default function LoggedPage() {
   const [active, setIsActive] = useState(false);
+  const [newCircle, setNewCircle] = useState(false);
 
   return (
     <ContainerMap active={active}>
@@ -138,15 +190,23 @@ export default function LoggedPage() {
             <img src={logo} alt="" />
           </div>
         </header>
-        <button className="add-circle">
+        <button onClick={() => setNewCircle(true)} className="add-circle">
           <MdOutlineAdd className="icon" />
           Novo Círculo
         </button>
+        {newCircle && (
+          <NewCircle newCircle={newCircle} setNewCircle={setNewCircle} />
+        )}
         <div className="menu-item">
           <button onClick={() => setIsActive(!active)} className="btn-item">
             <BiRightArrow className="icon" />
             Meus Círculos
           </button>
+        </div>
+        <div className="join-circle">
+          <label>Entre no círculo</label>
+          <input type="text" placeholder="Digite o código" />
+          <button>Entrar</button>
         </div>
       </div>
       <MapRender />
