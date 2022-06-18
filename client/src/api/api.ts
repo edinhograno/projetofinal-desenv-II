@@ -1,7 +1,5 @@
 import axios from "axios";
-import { TypesLogged } from "../types/types";
-
-const baseURL = "http://localhost:5000";
+import { baseURL } from "../types/types";
 
 export const register = async (
   name: string,
@@ -16,6 +14,9 @@ export const register = async (
     })
     .then((res) => {
       console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 
@@ -57,5 +58,27 @@ export const newCircle = async (
     })
     .then((res) => {
       console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+export const enterCircle = async (
+  token: string,
+  userid: string,
+  online: boolean | number
+) => {
+  await axios
+    .post(`${baseURL}/entercircle`, {
+      token: token,
+      userid: userid,
+      online: online,
+    })
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };

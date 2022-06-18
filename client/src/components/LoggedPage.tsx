@@ -1,21 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "leaflet/dist/leaflet.css";
 // eslint-disable-line
 import logo from "../img/logomenu.svg";
-import { MdOutlineAdd } from "react-icons/md";
+import { MdFormatListNumbered, MdOutlineAdd } from "react-icons/md";
 import { BiRightArrow } from "react-icons/bi";
 import MapRender from "./MapRender";
 import NewCircle from "./NewCircle";
+import { enterCircle } from "../api/api";
+import getCircles from "../hooks/getCirles";
+import axios from "axios";
+import { baseURL } from "../types/types";
 
-type Type = {
-  active: boolean;
-  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const ContainerMap = styled.div.attrs((props: Type) => ({
-  active: props.active,
-}))`
+const ContainerMap = styled.div`
   width: 100%;
   height: 100vh;
   position: relative;
@@ -84,9 +81,10 @@ const ContainerMap = styled.div.attrs((props: Type) => ({
   .menu-item {
     height: 65vh;
     width: 100%;
+    overflow: hidden;
 
     .btn-item {
-      margin: 0 1rem 1rem 0;
+      margin: 0 1rem 0 0;
       width: 95%;
       height: 3rem;
       border-top-right-radius: 2rem;
@@ -125,6 +123,36 @@ const ContainerMap = styled.div.attrs((props: Type) => ({
         &:before {
           left: 0;
         }
+      }
+    }
+    .list-circles {
+      height: 100%;
+      width: 100%;
+      ul {
+        height: auto;
+        width: 100%;
+        /* background-color: green; */
+      }
+      li {
+        width: 95%;
+        height: 3rem;
+        display: flex;
+        align-items: center;
+        padding: 0 1rem;
+        position: relative;
+        border-top-right-radius: 2rem;
+        border-bottom-right-radius: 2rem;
+        margin: 0 1rem 0 0;
+        background-color: #fff;
+        transition: all 0.1s ease-in-out;
+
+        &:hover {
+          background-color: rgba(66, 115, 185, 0.2);
+        }
+      }
+
+      li.active {
+        background-color: red;
       }
     }
   }
@@ -181,9 +209,57 @@ const ContainerMap = styled.div.attrs((props: Type) => ({
 export default function LoggedPage() {
   const [active, setIsActive] = useState(false);
   const [newCircle, setNewCircle] = useState(false);
+  const [userid, setUserId] = useState("");
+  const [token, setToken] = useState("");
+  const [circleList, setCircleList] = useState();
+  const [selectedCircle, setSelectedCircle] = useState({
+    token: "",
+    selected: "",
+    users: {},
+  });
+
+  useEffect(() => {
+    const userdata = localStorage.getItem("userdata");
+    const parsed = JSON.parse(userdata);
+    const userid = parsed[2];
+
+    if (userdata) {
+      setUserId(userid);
+    }
+    async function getCircles() {
+      try {
+        await axios
+          .post(`${baseURL}/circles`, { userid: userid })
+          .then((res) => {
+            setCircleList(res.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getCircles();
+  }, []);
+
+  async function getUsersCircleList() {
+    await axios
+      .post(`${baseURL}/circlesuserlist`, { token: selectedCircle.token })
+      .then((res) => {
+        setSelectedCircle({ ...selectedCircle, users: res.data });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  useEffect(() => {
+    getUsersCircleList();
+  }, [selectedCircle.selected]);
 
   return (
-    <ContainerMap active={active}>
+    <ContainerMap>
       <div className="container-menu">
         <header className="container-header">
           <div className="logo">
@@ -195,21 +271,71 @@ export default function LoggedPage() {
           Novo Círculo
         </button>
         {newCircle && (
-          <NewCircle newCircle={newCircle} setNewCircle={setNewCircle} />
+          <NewCircle
+            newCircle={newCircle}
+            setNewCircle={setNewCircle}
+            userid={userid}
+          />
         )}
         <div className="menu-item">
-          <button onClick={() => setIsActive(!active)} className="btn-item">
+          <button
+            onClick={() => {
+              setIsActive(!active);
+            }}
+            className="btn-item"
+          >
             <BiRightArrow className="icon" />
             Meus Círculos
           </button>
+          {active && (
+            <div className="list-circles">
+              <ul>
+                {circleList.map(
+                  (list: { name: string; token: string }, index: string) => {
+                    return (
+                      <li
+                        key={`circle-${index}`}
+                        onClick={() => {
+                          setSelectedCircle({
+                            ...selectedCircle,
+                            selected: `circle-${index}`,
+                            token: list.token,
+                          });
+                        }}
+                        className={`${
+                          selectedCircle.selected === `circle-${index}`
+                            ? "active"
+                            : ""
+                        }`}
+                      >
+                        {list.name}
+                      </li>
+                    );
+                  }
+                )}
+              </ul>
+            </div>
+          )}
         </div>
         <div className="join-circle">
           <label>Entre no círculo</label>
-          <input type="text" placeholder="Digite o código" />
-          <button>Entrar</button>
+          <input
+            onChange={(e) => {
+              setToken(e.target.value);
+            }}
+            type="text"
+            placeholder="Digite o código"
+          />
+          <button
+            onClick={() => {
+              enterCircle(token, userid, 0);
+            }}
+          >
+            Entrar
+          </button>
         </div>
       </div>
-      <MapRender />
+      <MapRender token={selectedCircle.token} users={selectedCircle.users} />
     </ContainerMap>
   );
 }

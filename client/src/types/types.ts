@@ -1,3 +1,5 @@
+export const baseURL = "http://localhost:5000";
+
 export type TypesData = {
   setData: React.Dispatch<React.SetStateAction<{}>>;
   data: {

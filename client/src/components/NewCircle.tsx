@@ -5,6 +5,7 @@ import { newCircle } from "../api/api";
 type Type = {
   newCircle: boolean;
   setNewCircle: React.Dispatch<React.SetStateAction<boolean>>;
+  userid: string;
 };
 
 const NewCircleContainer = styled.div`
@@ -105,17 +106,6 @@ export default function NewCircle(props: Type) {
     token: "",
   });
 
-  useEffect(() => {
-    const userdata = localStorage.getItem("userdata");
-    const parsed = JSON.parse(userdata);
-    const owneruserid = parsed[2];
-    const token = Math.random().toString(36).substr(2, 6).toUpperCase();
-    if (userdata) {
-      setCircleData({ ...circleData, owneruserid: owneruserid, token: token });
-      console.log(circleData);
-    }
-  }, []);
-
   return (
     <NewCircleContainer
       onClick={() => {
@@ -132,7 +122,17 @@ export default function NewCircle(props: Type) {
           <h3>Qual o nome do círculo?</h3>
           <input
             onChange={(e) => {
-              setCircleData({ ...circleData, circlename: e.target.value });
+              const token = Math.random()
+                .toString(36)
+                .substr(2, 6)
+                .toUpperCase();
+              setCircleData({
+                ...circleData,
+                circlename: e.target.value,
+                owneruserid: props.userid,
+                token: token,
+              });
+              console.log(circleData.circlename);
             }}
             type="text"
             placeholder=""

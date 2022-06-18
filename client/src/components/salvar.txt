@@ -1,0 +1,13 @@
+// {circleList.map((list: { name: string }, index: string) => {
+                //   const isOpen = selectedCircle.open === index;
+                //   return (
+                //     <li
+                //       key={`circle-${index}`}
+                //       onClick={() =>
+                //         setSelectedCircle({ ...selectedCircle, open: isOpen })
+                //       }
+                //     >
+                //       {list.name}
+                //     </li>
+                //   );
+                // })}
