@@ -45,6 +45,7 @@ const markerIcon = L.icon({
 
 export default function MapRender(props: Type) {
   // const location = useGeoLocation();
+  const [counter, setCounter] = useState(0);
   const [location, setLocation] = useState({
     loaded: true,
     coordinates: { lat: -30.03613700605358, lng: -51.21592021931656 },
@@ -64,11 +65,23 @@ export default function MapRender(props: Type) {
       });
       const NewUserLocations = await Promise.all($userLocations);
       setUserLocations(NewUserLocations);
-      console.log("resultado dessa merda", NewUserLocations);
     } catch (err) {
       console.log(err);
     }
   }
+
+  useEffect(() => {
+    getLocations();
+  }, [users]);
+
+  useEffect(() => {
+    setInterval(() => {
+      setCounter((state) => {
+        return state + 1;
+      });
+    }, 1000);
+  }, []);
+
   return (
     <Map>
       <MapContainer
@@ -85,17 +98,18 @@ export default function MapRender(props: Type) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {userLocations.map((locationsOfUser, index) => {
+          const i = counter % locationsOfUser.locations.length;
+          let locationUser = locationsOfUser.locations[i];
           if (location.loaded) {
-            return locationsOfUser.locations.map((location) => {
-              return (
-                <Marker
-                  icon={markerIcon}
-                  position={[location.lat, location.long]}
-                >
-                  <Popup>Achoooou!</Popup>
-                </Marker>
-              );
-            });
+            return (
+              <Marker
+                key={`location-${index}`}
+                icon={markerIcon}
+                position={[locationUser.lat, locationUser.long]}
+              >
+                <Popup>{locationUser.userid}</Popup>
+              </Marker>
+            );
           }
         })}
       </MapContainer>
