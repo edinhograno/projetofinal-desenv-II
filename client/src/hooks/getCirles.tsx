@@ -5,7 +5,6 @@ async function getCircles(userid: string) {
   let data;
   try {
     data = await axios.post(`${baseURL}/circles`, { userid: userid });
-    console.log(data);
   } catch (err) {
     console.log(err);
   }

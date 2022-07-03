@@ -10,7 +10,6 @@ function useGeoLocation() {
 
   function contador() {
     count++;
-    console.log(count);
   }
 
   useEffect(() => {
@@ -25,7 +24,6 @@ function useGeoLocation() {
       contador();
     };
     navigator.geolocation.getCurrentPosition(onSuccess);
-    console.log("rodando");
   }, []);
 
   useEffect(() => {
@@ -41,7 +39,6 @@ function useGeoLocation() {
         contador();
       };
       navigator.geolocation.getCurrentPosition(onSuccess);
-      console.log("rodando");
     }, 15000);
     return () => clearInterval(interval);
   }, []);

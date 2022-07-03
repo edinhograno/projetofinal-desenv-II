@@ -132,7 +132,6 @@ export default function NewCircle(props: Type) {
                 owneruserid: props.userid,
                 token: token,
               });
-              console.log(circleData.circlename);
             }}
             type="text"
             placeholder=""

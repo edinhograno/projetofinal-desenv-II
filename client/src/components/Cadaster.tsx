@@ -16,28 +16,21 @@ export default function Cadaster(props: TypesData) {
     const password = props.data.password;
     const confirmPassword = props.data.confirmPassword;
 
-    console.log(props.data);
     if (email !== "" && name !== "" && password !== "") {
       if (password !== confirmPassword) {
         setStatus({ ...status, password: true, confirmPassword: true });
-        console.log(status);
       } else {
         register(name, email, password);
-        console.log("foi pra api");
       }
     } else {
       if (name === "") {
         setStatus({ ...status, name: true });
-        console.log(status);
       } else if (email === "") {
         setStatus({ ...status, email: true });
-        console.log(status);
       } else if (password === "") {
         setStatus({ ...status, password: true });
-        console.log(status);
       } else if (confirmPassword === "") {
         setStatus({ ...status, confirmPassword: true });
-        console.log(status);
       }
     }
   };

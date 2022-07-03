@@ -6,10 +6,13 @@ import useGeoLocation from "../hooks/useGeoLocation";
 import L from "leaflet";
 import { baseURL } from "../types/types";
 import axios from "axios";
+import { setOnline, setSOS } from "../api/api";
 
 type Type = {
   token: string;
   users: { userid: string }[];
+  userid: string;
+  username: string;
 };
 
 type Location = {
@@ -30,12 +33,73 @@ const Map = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 
   .map-container {
     z-index: 1;
     width: 100%;
     height: 100%;
   }
+`;
+
+const Buttons = styled.div`
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  right: 0;
+  /* background-color: red; */
+  width: 20rem;
+  height: 4rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+  .status {
+    height: 100%;
+    width: 55%;
+    /* background-color: blue; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .buttons-action {
+    border-radius: 2rem;
+    border: none;
+    background-color: #de3e33;
+    color: #fff;
+    cursor: pointer;
+  }
+  button {
+    width: 35%;
+    height: 70%;
+  }
+`;
+
+const NotificationsButton = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2rem;
+  height: 2rem;
+  z-index: 25;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background-color: rgba(12, 12, 12, 0.4);
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+`;
+
+const Notifications = styled.div`
+  display: flex;
+  width: 100%;
+  height: 100%;
+  z-index: 20;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(12, 12, 12, 0.4);
 `;
 
 const markerIcon = L.icon({
@@ -45,6 +109,7 @@ const markerIcon = L.icon({
 
 export default function MapRender(props: Type) {
   // const location = useGeoLocation();
+  const [notificationsShow, setNotificationsShow] = useState(false);
   const [counter, setCounter] = useState(0);
   const [location, setLocation] = useState({
     loaded: true,
@@ -79,7 +144,7 @@ export default function MapRender(props: Type) {
       setCounter((state) => {
         return state + 1;
       });
-    }, 1000);
+    }, 5000);
   }, []);
 
   return (
@@ -113,12 +178,44 @@ export default function MapRender(props: Type) {
           }
         })}
       </MapContainer>
-      <button
-        onClick={getLocations}
-        style={{ zIndex: 1000, position: "absolute", top: 0, right: 0 }}
+      <NotificationsButton
+        onClick={() => setNotificationsShow(!notificationsShow)}
       >
-        Clique aqui
-      </button>
+        N
+      </NotificationsButton>
+      {notificationsShow && <Notifications></Notifications>}
+      <Buttons onClick={getLocations}>
+        <div className="status">
+          <button
+            onClick={() => {
+              setOnline(props.token, props.userid, 1);
+            }}
+            className="buttons-action"
+          >
+            ON
+          </button>
+          <button
+            onClick={() => {
+              setOnline(props.token, props.userid, 0);
+            }}
+            className="buttons-action"
+          >
+            OFF
+          </button>
+        </div>
+        <button
+          onClick={() => {
+            setSOS(
+              props.token,
+              props.userid,
+              `O usuario ${props.username} gerou um pedido de SOS`
+            );
+          }}
+          className="buttons-action"
+        >
+          SOS
+        </button>
+      </Buttons>
     </Map>
   );
 }

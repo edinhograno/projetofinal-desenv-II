@@ -145,6 +145,7 @@ const ContainerMap = styled.div`
         margin: 0 1rem 0 0;
         background-color: #fff;
         transition: all 0.1s ease-in-out;
+        cursor: pointer;
 
         &:hover {
           background-color: rgba(66, 115, 185, 0.2);
@@ -152,7 +153,8 @@ const ContainerMap = styled.div`
       }
 
       li.active {
-        background-color: red;
+        background-color: #de3e33;
+        color: #fff;
       }
     }
   }
@@ -210,6 +212,7 @@ export default function LoggedPage() {
   const [active, setIsActive] = useState(false);
   const [newCircle, setNewCircle] = useState(false);
   const [userid, setUserId] = useState("");
+  const [userName, setUserName] = useState("");
   const [token, setToken] = useState("");
   const [circleList, setCircleList] = useState();
   const [selectedCircle, setSelectedCircle] = useState({
@@ -222,9 +225,11 @@ export default function LoggedPage() {
     const userdata = localStorage.getItem("userdata");
     const parsed = JSON.parse(userdata);
     const userid = parsed[2];
+    const username = parsed[0];
 
     if (userdata) {
       setUserId(userid);
+      setUserName(username);
     }
     async function getCircles() {
       try {
@@ -290,7 +295,7 @@ export default function LoggedPage() {
           {active && (
             <div className="list-circles">
               <ul>
-                {circleList.map(
+                {circleList?.map(
                   (list: { name: string; token: string }, index: string) => {
                     return (
                       <li
@@ -335,7 +340,12 @@ export default function LoggedPage() {
           </button>
         </div>
       </div>
-      <MapRender token={selectedCircle.token} users={selectedCircle.users} />
+      <MapRender
+        token={selectedCircle.token}
+        users={selectedCircle.users}
+        userid={userid}
+        username={userName}
+      />
     </ContainerMap>
   );
 }

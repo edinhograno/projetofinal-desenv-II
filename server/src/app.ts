@@ -23,13 +23,7 @@ app.post("/register", (req: Request, res: Response) => {
   const query =
     "INSERT INTO users(name, email, password, creationdate) VALUES ($1,$2, $3,NOW());";
   try {
-    pool.query(query, values, (err: Error, res: QueryResult) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(res);
-      }
-    });
+    pool.query(query, values);
   } catch (error) {
     console.log(error);
   }
@@ -75,13 +69,7 @@ app.post("/newcircle", (req: Request, res: Response) => {
         const query =
           "INSERT INTO circlesocial(token, userid, online) VALUES ($1, $2, $3);";
 
-        pool.query(query, circleSocialData, (err: Error, res: QueryResult) => {
-          if (err) {
-            console.log("Não pode adicionar Owner no circleSocial");
-          } else {
-            console.log("Owner adicionado com sucesso a circleSocial");
-          }
-        });
+        pool.query(query, circleSocialData);
       }
     });
   } catch (error) {
@@ -102,18 +90,7 @@ app.post("/entercircle", async (req: Request, res: Response) => {
           const circleSocialData = [values[0], values[1], values[3]];
           const query =
             "INSERT INTO circlesocial(token, userid, online) VALUES ($1, $2, $3);";
-          pool.query(
-            query,
-            circleSocialData,
-            (err: Error, res: QueryResult) => {
-              if (err) {
-                console.log("Não deu pra adicionar no circle");
-              } else {
-                console.log("Deu bom, foi adicionado ao circle");
-              }
-            }
-          );
-          console.log("deu bom");
+          pool.query(query, circleSocialData);
         } else {
           console.log("deu merda");
         }
@@ -193,6 +170,7 @@ app.post("/locations", async (req: Request, res: Response) => {
   WHERE 1=1
   and ld.userid = $1
   and cc.token = $2
+  --and cc.online = '1'
   order by locationdate;`;
 
   try {
@@ -202,16 +180,47 @@ app.post("/locations", async (req: Request, res: Response) => {
       .then((res) => {
         if (res.rowCount >= 1) {
           result = res.rows;
-          console.log(result);
         } else {
-          result = "Usuário sem localizações";
-          console.log(res.rows);
+          result = [];
         }
       })
       .catch((err) => {
         result = "Deu erro";
         console.log(err);
       });
+    res.send(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// Define se o usuário está online ou não
+app.post("/status", async (req: Request, res: Response) => {
+  const values = [req.body.userid, req.body.token, req.body.status];
+  const setOnline = `UPDATE circlesocial
+	SET online = $3
+    where userid = $1 and token = $2`;
+
+  try {
+    let result;
+    result = await pool.query(setOnline, values);
+    res.send(result);
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// // Define se o usuário está em perigo e exibe o alerta
+app.post("/sos", async (req: Request, res: Response) => {
+  const values = [req.body.token, req.body.message, req.body.userid];
+  const setSOS = `INSERT INTO circletimeline(
+	token, message, userid)
+	VALUES ($1, $2, $3);`;
+
+  try {
+    let result;
+    result = await pool.query(setSOS, values);
     res.send(result);
     console.log(result);
   } catch (error) {
