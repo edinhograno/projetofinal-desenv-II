@@ -162,16 +162,17 @@ app.post("/circlesuserlist", async (req: Request, res: Response) => {
 
 // Rota para consultar localizações do user
 app.post("/locations", async (req: Request, res: Response) => {
-  const values = [req.body.userid, req.body.token];
-  const getLocations = `SELECT ld.userid, ld.lat, ld.long, cc.online 
-  FROM locations ld
-  join circlesocial cc
-  on ld.userid::uuid = cc.userid::uuid
-  WHERE 1=1
-  and ld.userid = $1
-  and cc.token = $2
-  --and cc.online = '1'
-  order by locationdate;`;
+  const values = [req.body.token];
+  const getLocations = `SELECT distinct on ("userid") cc.userid, lat, "long", locationdate, u.name
+	FROM public.locations lt
+    JOIN circlesocial cc
+    on lt.userid::uuid = cc.userid::uuid
+    JOIN users u
+    on u.userid::uuid = cc.userid::uuid
+    WHERE 1=1
+    and cc.online = '1'
+    and cc.token = $1
+    order by userid, locationdate desc;`;
 
   try {
     let result;
@@ -227,3 +228,36 @@ app.post("/sos", async (req: Request, res: Response) => {
     console.log(error);
   }
 });
+
+async function simulateSetLocationUserOne() {
+  const setLocation = `INSERT INTO public.locations(
+      userid, lat, "long", locationdate)
+      VALUES ('49d86cec-9957-438e-a066-4acfb17f01b0', 
+                random()*(-30.05+30.03)-30.03, 
+                random()*(-51.22+51.20)-51.20, 
+                NOW());`;
+
+  try {
+    await pool.query(setLocation);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function simulateSetLocationUserTwo() {
+  const setLocation = `INSERT INTO public.locations(
+      userid, lat, "long", locationdate)
+      VALUES ('de1cba28-a711-434d-a714-b7edaaaa8014', 
+                random()*(-30.05+30.03)-30.03, 
+                random()*(-51.22+51.20)-51.20, 
+                NOW());`;
+
+  try {
+    await pool.query(setLocation);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+setInterval(simulateSetLocationUserOne, 10000);
+setInterval(simulateSetLocationUserTwo, 10000);

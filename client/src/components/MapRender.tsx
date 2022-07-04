@@ -19,12 +19,8 @@ type Location = {
   lat: number;
   long: number;
   userid: string;
-  online: "0" | "1";
-};
-
-type UserLocations = {
-  userid: string;
-  locations: Array<Location>;
+  locationdate: string;
+  name: string;
 };
 
 const Map = styled.div`
@@ -115,21 +111,20 @@ export default function MapRender(props: Type) {
     loaded: true,
     coordinates: { lat: -30.03613700605358, lng: -51.21592021931656 },
   });
-  const [userLocations, setUserLocations] = useState<UserLocations[]>([]);
+  const [userLocations, setUserLocations] = useState<Location[]>([]);
   const users = props.users;
 
   async function getLocations() {
     try {
-      const $userLocations = users.map(async (user) => {
-        let response = await axios.post<Location[]>(`${baseURL}/locations`, {
-          userid: user.userid,
+      const locations = await axios
+        .post<Location[]>(`${baseURL}/locations`, {
           token: props.token,
+        })
+        .then((res) => {
+          console.log("eu sou a data", res.data);
+          return res.data;
         });
-        const locations = response.data;
-        return { locations, userid: user.userid };
-      });
-      const NewUserLocations = await Promise.all($userLocations);
-      setUserLocations(NewUserLocations);
+      setUserLocations(locations);
     } catch (err) {
       console.log(err);
     }
@@ -137,14 +132,14 @@ export default function MapRender(props: Type) {
 
   useEffect(() => {
     getLocations();
-  }, [users]);
+  }, [users, counter]);
 
   useEffect(() => {
     setInterval(() => {
       setCounter((state) => {
         return state + 1;
       });
-    }, 5000);
+    }, 200);
   }, []);
 
   return (
@@ -162,20 +157,16 @@ export default function MapRender(props: Type) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {userLocations.map((locationsOfUser, index) => {
-          const i = counter % locationsOfUser.locations.length;
-          let locationUser = locationsOfUser.locations[i];
-          if (location.loaded) {
-            return (
-              <Marker
-                key={`location-${index}`}
-                icon={markerIcon}
-                position={[locationUser.lat, locationUser.long]}
-              >
-                <Popup>{locationUser.userid}</Popup>
-              </Marker>
-            );
-          }
+        {userLocations.map((location, index) => {
+          return (
+            <Marker
+              key={`location-${index}`}
+              icon={markerIcon}
+              position={[location.lat, location.long]}
+            >
+              <Popup>{location.name}</Popup>
+            </Marker>
+          );
         })}
       </MapContainer>
       <NotificationsButton
