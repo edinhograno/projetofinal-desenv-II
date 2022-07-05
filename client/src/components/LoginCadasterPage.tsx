@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// @ts-ignore: Unreachable code error
 import logo from "../img/logo.svg";
 import { Container } from "../styles/LoginCadasterPageStyle";
 import { TypesLoginData, TypesData, TypesLogged } from "../types/types";

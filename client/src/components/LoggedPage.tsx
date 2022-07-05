@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import "leaflet/dist/leaflet.css";
-// eslint-disable-line
+// @ts-ignore: Unreachable code error
 import logo from "../img/logomenu.svg";
-import { MdFormatListNumbered, MdOutlineAdd } from "react-icons/md";
+import { MdOutlineAdd } from "react-icons/md";
 import { BiRightArrow } from "react-icons/bi";
 import MapRender from "./MapRender";
 import NewCircle from "./NewCircle";
 import { enterCircle } from "../api/api";
-import getCircles from "../hooks/getCirles";
+// import getCircles from "../hooks/getCirles";
 import axios from "axios";
 import { baseURL } from "../types/types";
 
@@ -225,6 +225,7 @@ export default function LoggedPage() {
 
   useEffect(() => {
     const userdata = localStorage.getItem("userdata");
+    // @ts-ignore: Unreachable code error
     const parsed = JSON.parse(userdata);
     const userid = parsed[2];
     const username = parsed[0];
@@ -297,29 +298,32 @@ export default function LoggedPage() {
           {active && (
             <div className="list-circles">
               <ul>
-                {circleList?.map(
-                  (list: { name: string; token: string }, index: string) => {
-                    return (
-                      <li
-                        key={`circle-${index}`}
-                        onClick={() => {
-                          setSelectedCircle({
-                            ...selectedCircle,
-                            selected: `circle-${index}`,
-                            token: list.token,
-                          });
-                        }}
-                        className={`${
-                          selectedCircle.selected === `circle-${index}`
-                            ? "active"
-                            : ""
-                        }`}
-                      >
-                        {list.name}
-                      </li>
-                    );
-                  }
-                )}
+                {
+                  // @ts-ignore: Unreachable code error
+                  circleList?.map(
+                    (list: { name: string; token: string }, index: string) => {
+                      return (
+                        <li
+                          key={`circle-${index}`}
+                          onClick={() => {
+                            setSelectedCircle({
+                              ...selectedCircle,
+                              selected: `circle-${index}`,
+                              token: list.token,
+                            });
+                          }}
+                          className={`${
+                            selectedCircle.selected === `circle-${index}`
+                              ? "active"
+                              : ""
+                          }`}
+                        >
+                          {list.name}
+                        </li>
+                      );
+                    }
+                  )
+                }
               </ul>
             </div>
           )}
@@ -344,6 +348,7 @@ export default function LoggedPage() {
       </div>
       <MapRender
         token={selectedCircle.token}
+        // @ts-ignore: Unreachable code error
         users={selectedCircle.users}
         userid={userid}
         username={userName}

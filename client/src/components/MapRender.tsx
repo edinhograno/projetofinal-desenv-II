@@ -3,7 +3,7 @@ import sireneAnimation from "../animations/sirene.json";
 import marker from "../img/marker.svg";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import styled from "styled-components";
-import useGeoLocation from "../hooks/useGeoLocation";
+// import useGeoLocation from "../hooks/useGeoLocation";
 import L from "leaflet";
 import { baseURL } from "../types/types";
 import axios from "axios";
