@@ -212,12 +212,14 @@ app.post("/status", async (req: Request, res: Response) => {
   }
 });
 
-// // Define se o usuário está em perigo e exibe o alerta
+// Define se o usuário está em perigo e exibe o alerta
 app.post("/sos", async (req: Request, res: Response) => {
-  const values = [req.body.token, req.body.message, req.body.userid];
-  const setSOS = `INSERT INTO circletimeline(
-	token, message, userid)
-	VALUES ($1, $2, $3);`;
+  const values = [req.body.token, req.body.userid];
+  const setSOS = `UPDATE public.circlesocial
+	SET sos= '1', socialdate= NOW()
+	WHERE 1=1
+    and token = $1
+    and userid = $2;`;
 
   try {
     let result;
@@ -229,6 +231,46 @@ app.post("/sos", async (req: Request, res: Response) => {
   }
 });
 
+// Remove o alerta do usuário que estava em perigo
+app.post("/removesos", async (req: Request, res: Response) => {
+  const values = [req.body.token, req.body.userid];
+  const removeSOS = `UPDATE public.circlesocial
+	SET sos= '0'
+	WHERE 1=1
+    and token = $1
+    and userid = $2;`;
+
+  try {
+    await pool.query(removeSOS, values);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// verifica se tem algum usuário pedindo ajuda
+app.post("/usersaskinghelp", async (req: Request, res: Response) => {
+  const values = [req.body.token];
+  const getUsersAskingHelp = `SELECT name, cs.userid, token, socialdate 
+	FROM circlesocial cs
+    JOIN users u
+    on cs.userid::uuid = u.userid::uuid
+    where 1=1
+    and token = $1
+    and sos = '1';`;
+
+  try {
+    const data = await pool.query(getUsersAskingHelp, values).then((res) => {
+      if (res.rowCount >= 1) {
+        return res.rows;
+      }
+    });
+    res.send(data);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+// funções que simulam localizações e insere no banco de dados
 async function simulateSetLocationUserOne() {
   const setLocation = `INSERT INTO public.locations(
       userid, lat, "long", locationdate)

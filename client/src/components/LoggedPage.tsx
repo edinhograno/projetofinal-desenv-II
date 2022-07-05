@@ -12,7 +12,9 @@ import getCircles from "../hooks/getCirles";
 import axios from "axios";
 import { baseURL } from "../types/types";
 
-const ContainerMap = styled.div`
+const ContainerMap = styled.div.attrs((props: { active: boolean }) => ({
+  active: props.active,
+}))`
   width: 100%;
   height: 100vh;
   position: relative;
@@ -264,7 +266,7 @@ export default function LoggedPage() {
   }, [selectedCircle.selected]);
 
   return (
-    <ContainerMap>
+    <ContainerMap active={active}>
       <div className="container-menu">
         <header className="container-header">
           <div className="logo">

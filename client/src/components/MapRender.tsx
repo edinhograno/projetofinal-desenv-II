@@ -23,6 +23,13 @@ type Location = {
   name: string;
 };
 
+type UserHelp = {
+  name: string;
+  userid: string;
+  token: string;
+  socialdate: string;
+};
+
 const Map = styled.div`
   width: 100%;
   height: 100%;
@@ -71,26 +78,11 @@ const Buttons = styled.div`
   }
 `;
 
-const NotificationsButton = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 2rem;
-  height: 2rem;
-  z-index: 25;
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background-color: rgba(12, 12, 12, 0.4);
-  color: #fff;
-  font-size: 2rem;
-  cursor: pointer;
-`;
-
 const Notifications = styled.div`
   display: flex;
-  width: 100%;
-  height: 100%;
+  flex-direction: column;
+  width: 50rem;
+  height: 5rem;
   z-index: 20;
   position: absolute;
   top: 0;
@@ -105,6 +97,7 @@ const markerIcon = L.icon({
 
 export default function MapRender(props: Type) {
   // const location = useGeoLocation();
+  const [help, setHelp] = useState<UserHelp[]>([]);
   const [notificationsShow, setNotificationsShow] = useState(false);
   const [counter, setCounter] = useState(0);
   const [location, setLocation] = useState({
@@ -121,7 +114,6 @@ export default function MapRender(props: Type) {
           token: props.token,
         })
         .then((res) => {
-          console.log("eu sou a data", res.data);
           return res.data;
         });
       setUserLocations(locations);
@@ -130,8 +122,31 @@ export default function MapRender(props: Type) {
     }
   }
 
+  async function userAskingHelp() {
+    const data = await axios.post<UserHelp[]>(`${baseURL}/usersaskinghelp`, {
+      token: props.token,
+    });
+    setHelp(data.data);
+  }
+
   useEffect(() => {
     getLocations();
+    userAskingHelp();
+
+    if (help) {
+      help.map((user) => {
+        const datePostGres = new Date(user.socialdate).getTime();
+        const dateNow = Date.now() + 3 * 60 * 60 * 1000;
+        const dateFinal = (dateNow - datePostGres) / 1000;
+
+        if (dateFinal === 20 || dateFinal > 20) {
+          axios.post<UserHelp[]>(`${baseURL}/removesos`, {
+            token: user.token,
+            userid: user.userid,
+          });
+        }
+      });
+    }
   }, [users, counter]);
 
   useEffect(() => {
@@ -169,12 +184,25 @@ export default function MapRender(props: Type) {
           );
         })}
       </MapContainer>
-      <NotificationsButton
-        onClick={() => setNotificationsShow(!notificationsShow)}
-      >
-        N
-      </NotificationsButton>
-      {notificationsShow && <Notifications></Notifications>}
+
+      <Notifications>
+        <p>O usuário edinho gerou um alerta</p>
+      </Notifications>
+
+      {help && (
+        <Notifications>
+          {help.map((person, index) => {
+            if (props.token === person.token) {
+              return (
+                <p key={`user-${index}`}>
+                  O usuário {person.name} está pedindo ajuda!
+                </p>
+              );
+            }
+          })}
+        </Notifications>
+      )}
+
       <Buttons onClick={getLocations}>
         <div className="status">
           <button
@@ -196,11 +224,7 @@ export default function MapRender(props: Type) {
         </div>
         <button
           onClick={() => {
-            setSOS(
-              props.token,
-              props.userid,
-              `O usuario ${props.username} gerou um pedido de SOS`
-            );
+            setSOS(props.token, props.userid);
           }}
           className="buttons-action"
         >

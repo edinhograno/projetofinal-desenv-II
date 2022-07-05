@@ -78,16 +78,11 @@ export const setOnline = async (
   }
 };
 
-export const setSOS = async (
-  token: string,
-  userid: string,
-  message: string
-) => {
+export const setSOS = async (token: string, userid: string) => {
   if (token) {
     await axios.post(`${baseURL}/sos`, {
       token: token,
       userid: userid,
-      message: message,
     });
   }
 };
