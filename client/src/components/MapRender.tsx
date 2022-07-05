@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import sireneAnimation from "../animations/sirene.json";
 import marker from "../img/marker.svg";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import styled from "styled-components";
@@ -7,6 +8,8 @@ import L from "leaflet";
 import { baseURL } from "../types/types";
 import axios from "axios";
 import { setOnline, setSOS } from "../api/api";
+import Alert from "@mui/material/Alert";
+import Lottie from "react-lottie";
 
 type Type = {
   token: string;
@@ -80,14 +83,13 @@ const Buttons = styled.div`
 
 const Notifications = styled.div`
   display: flex;
-  flex-direction: column;
-  width: 50rem;
-  height: 5rem;
+  width: auto;
+  height: auto;
   z-index: 20;
   position: absolute;
   top: 0;
-  left: 0;
-  background-color: rgba(12, 12, 12, 0.4);
+  left: 50%;
+  background-color: rgb(253, 237, 237);
 `;
 
 const markerIcon = L.icon({
@@ -147,15 +149,24 @@ export default function MapRender(props: Type) {
         }
       });
     }
-  }, [users, counter]);
+  }, [counter]);
 
   useEffect(() => {
     setInterval(() => {
       setCounter((state) => {
         return state + 1;
       });
-    }, 200);
+    }, 2000);
   }, []);
+
+  const animation = {
+    loop: true,
+    autoplay: true,
+    animationData: sireneAnimation,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   return (
     <Map>
@@ -185,18 +196,17 @@ export default function MapRender(props: Type) {
         })}
       </MapContainer>
 
-      <Notifications>
-        <p>O usuário edinho gerou um alerta</p>
-      </Notifications>
-
       {help && (
         <Notifications>
           {help.map((person, index) => {
             if (props.token === person.token) {
               return (
-                <p key={`user-${index}`}>
-                  O usuário {person.name} está pedindo ajuda!
-                </p>
+                <>
+                  <Alert key={`user-${index}`} severity="error">
+                    O usuário {person.name} está pedindo ajuda!
+                  </Alert>
+                  <Lottie style={{ width: 50 }} options={animation} />
+                </>
               );
             }
           })}
