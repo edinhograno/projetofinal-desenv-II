@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import sireneAnimation from "../animations/sirene.json";
+// @ts-ignore: Unreachable code error
 import marker from "../img/marker.svg";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import styled from "styled-components";

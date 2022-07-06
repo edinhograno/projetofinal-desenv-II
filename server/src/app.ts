@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import { Client, Pool, QueryResult } from "pg";
+import { Pool, QueryResult } from "pg";
 
 require("dotenv").config();
 
