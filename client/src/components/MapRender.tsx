@@ -11,6 +11,7 @@ import axios from "axios";
 import { setOnline, setSOS } from "../api/api";
 import Alert from "@mui/material/Alert";
 import Lottie from "react-lottie";
+import Button from "@mui/material/Button/Button";
 
 type Type = {
   token: string;
@@ -69,16 +70,13 @@ const Buttons = styled.div`
     justify-content: space-around;
     align-items: center;
   }
-  .buttons-action {
-    border-radius: 2rem;
-    border: none;
-    background-color: #de3e33;
-    color: #fff;
-    cursor: pointer;
-  }
   button {
     width: 35%;
     height: 70%;
+    background-color: #de3e33;
+  }
+  button:hover {
+    background-color: #4273b9;
   }
 `;
 
@@ -214,33 +212,33 @@ export default function MapRender(props: Type) {
         </Notifications>
       )}
 
-      <Buttons onClick={getLocations}>
+      <Buttons>
         <div className="status">
-          <button
+          <Button
             onClick={() => {
               setOnline(props.token, props.userid, 1);
             }}
-            className="buttons-action"
+            variant="contained"
           >
-            ON
-          </button>
-          <button
+            On
+          </Button>
+          <Button
             onClick={() => {
               setOnline(props.token, props.userid, 0);
             }}
-            className="buttons-action"
+            variant="contained"
           >
-            OFF
-          </button>
+            Off
+          </Button>
         </div>
-        <button
+        <Button
           onClick={() => {
             setSOS(props.token, props.userid);
           }}
-          className="buttons-action"
+          variant="contained"
         >
-          SOS
-        </button>
+          Sos
+        </Button>
       </Buttons>
     </Map>
   );

@@ -140,6 +140,7 @@ const ContainerMap = styled.div.attrs((props: { active: boolean }) => ({
         height: 3rem;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         padding: 0 1rem;
         position: relative;
         border-top-right-radius: 2rem;
@@ -318,7 +319,8 @@ export default function LoggedPage() {
                               : ""
                           }`}
                         >
-                          {list.name}
+                          <p>{list.name}</p>
+                          <p>{list.token}</p>
                         </li>
                       );
                     }
